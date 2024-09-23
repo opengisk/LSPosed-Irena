@@ -19,7 +19,9 @@
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.ide.common.signing.KeystoreHelper
+//import org.gradle.internal.impldep.jcifs.dcerpc.UUID
 import java.io.PrintStream
+import java.util.UUID
 
 plugins {
     alias(libs.plugins.agp.app)
@@ -100,6 +102,7 @@ android.applicationVariants.all {
                 sign?.keyPassword,
                 sign?.keyAlias
             )
+            val uuid = UUID.randomUUID().toString();
             PrintStream(outSrc).print(
                 """
                 |package org.lsposed.lspd.util;
@@ -107,6 +110,7 @@ android.applicationVariants.all {
                 |    public static final byte[] CERTIFICATE = {${
                     certificateInfo.certificate.encoded.joinToString(",")
                 }};
+                |    public static final String CLI_UUID = "$uuid";
                 |}""".trimMargin()
             )
         }
@@ -118,6 +122,7 @@ dependencies {
     implementation(libs.libxposed.`interface`)
     implementation(libs.agp.apksig)
     implementation(libs.commons.lang3)
+    implementation(libs.picocli)
     implementation(projects.hiddenapi.bridge)
     implementation(projects.services.daemonService)
     implementation(projects.services.managerService)

@@ -101,8 +101,10 @@ public class ConfigManager {
     private boolean verboseLog = true;
     private boolean dexObfuscate = true;
     private boolean enableStatusNotification = true;
+    private boolean bEnableCli = false;
     private Path miscPath = null;
 
+    private int iSessionTimeout = -1;
     private int managerUid = -1;
 
     private final Handler cacheHandler;
@@ -277,6 +279,12 @@ public class ConfigManager {
             // TODO: remove
             updateModulePrefs("lspd", 0, "config", "enable_auto_add_shortcut", null);
         }
+
+        bool = config.get("enable_cli");
+        bEnableCli = bool != null && (boolean) bool;
+
+        bool = config.get("cli_session_timeout");
+        iSessionTimeout = bool == null ? -1 : (int) bool;
 
         bool = config.get("enable_status_notification");
         enableStatusNotification = bool == null || (boolean) bool;
@@ -1083,6 +1091,21 @@ public class ConfigManager {
     public void setEnableStatusNotification(boolean enable) {
         updateModulePrefs("lspd", 0, "config", "enable_status_notification", enable);
         enableStatusNotification = enable;
+    }
+
+    public boolean isEnableCli() {
+        return bEnableCli;
+    }
+    public void setEnableCli(boolean on) {
+        updateModulePrefs("lspd", 0, "config", "enable_cli", on);
+        bEnableCli = on;
+    }
+    public int getSessionTimeout() {
+        return iSessionTimeout;
+    }
+    public void setSessionTimeout(int iTimeout) {
+        updateModulePrefs("lspd", 0, "config", "cli_session_timeout", iTimeout);
+        iSessionTimeout = iTimeout;
     }
 
     public ParcelFileDescriptor getManagerApk() {
