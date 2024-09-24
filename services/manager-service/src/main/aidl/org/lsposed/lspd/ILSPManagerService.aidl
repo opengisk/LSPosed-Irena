@@ -91,8 +91,4 @@ interface ILSPManagerService {
     boolean isEnableCli() = 49;
 
     void setEnableCli(boolean enable) = 50;
-
-    int getSessionTimeout() = 51;
-
-    void setSessionTimeout(int iTimeout) = 52;
 }

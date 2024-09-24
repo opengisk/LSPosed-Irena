@@ -156,11 +156,10 @@ public class LSPApplicationService extends ILSPApplicationService.Stub {
     public int requestCLIBinder(String sPin, List<IBinder> binder) throws RemoteException {
         var processInfo = ensureRegistered();
         CLIService cliService = ServiceManager.getCLIService();
-        if (cliService.isValidSession(processInfo.pid, sPin)) {
+        if (cliService.isValidSession(processInfo.pid)) {
             binder.add(cliService);
             return 0;
         } else {
-            cliService.requestSession(processInfo.pid);
             return 1;
         }
     }

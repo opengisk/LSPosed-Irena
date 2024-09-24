@@ -643,8 +643,6 @@ public class Main implements Runnable {
                 int iStatus = service.requestCLIBinder(sPin, lstBinder);
                 if (iStatus == 0) {
                     return ICLIService.Stub.asInterface(lstBinder.get(0));
-                } else if (iStatus == 1) { // request pin to user
-                    sPin = new String(System.console().readPassword("Enter pin code: "));
                 } else {
                     System.err.println("ERROR: cli request failed");
                     return null;

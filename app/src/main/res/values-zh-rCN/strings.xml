@@ -204,8 +204,6 @@
     <string name="settings_group_cli">CLI</string>
     <string name="pref_title_enable_cli">启用 CLI</string>
     <string name="pref_summary_enable_cli">(实验性选项)</string>
-    <string name="timeout_session">会话超时时间(分钟)</string>
-    <string name="one_command">一行命令之后</string>
     <!-- Module Repo -->
     <string name="module_readme">自述文件</string>
     <string name="module_releases">版本</string>

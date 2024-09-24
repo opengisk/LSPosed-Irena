@@ -555,12 +555,4 @@ public class LSPManagerService extends ILSPManagerService.Stub {
     public void setEnableCli(boolean enabled) {
         ConfigManager.getInstance().setEnableCli(enabled);
     }
-    @Override
-    public int getSessionTimeout() {
-        return ConfigManager.getInstance().getSessionTimeout();
-    }
-    @Override
-    public void setSessionTimeout(int iTimeout) {
-        ConfigManager.getInstance().setSessionTimeout(iTimeout);
-    }
 }

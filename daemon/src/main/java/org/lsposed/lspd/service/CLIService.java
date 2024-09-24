@@ -21,14 +21,8 @@ package org.lsposed.lspd.service;
 
 import static org.lsposed.lspd.service.ServiceManager.TAG;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ParceledListSlice;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -37,38 +31,23 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import org.lsposed.daemon.BuildConfig;
-import org.lsposed.daemon.R;
 import org.lsposed.lspd.ICLIService;
 import org.lsposed.lspd.models.Application;
-import org.lsposed.lspd.util.FakeContext;
 import org.lsposed.lspd.util.SignInfo;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 import io.github.libxposed.service.IXposedService;
 import rikka.parcelablelist.ParcelableListSlice;
 
 public class CLIService extends ICLIService.Stub {
 
-    private final static Map<Integer, Session> sessions = new ConcurrentHashMap<>(3);
     private static final HandlerThread worker = new HandlerThread("cli worker");
     private static final Handler workerHandler;
-
-    private static final String CHANNEL_ID = "lsposedpin";
-    private static final String CHANNEL_NAME = "Pin code";
-    private static final int CHANNEL_IMP = NotificationManager.IMPORTANCE_HIGH;
-    private static final int NOTIFICATION_ID = 2000;
-    private static final String opPkg = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ?
-            "android" : "com.android.settings";
 
     // E/JavaBinder      ] *** Uncaught remote exception!  (Exceptions are not yet supported across processes.)
     private String sLastMsg;
@@ -95,55 +74,10 @@ public class CLIService extends ICLIService.Stub {
         return -1;
     }
 
-    private static class Session {
-        boolean bValid;
-        String sPIN;
-        LocalDateTime ldtStartSession;
-    }
-
-    public boolean isValidSession(int iPid, String sPin) {
+    public boolean isValidSession(int iPid) {
         var iPPid = getParentPid(iPid);
         Log.d(TAG, "cli validating session pid=" + iPid + " ppid=" + iPPid);
-        if (iPPid != -1) {
-            int timeout = ConfigManager.getInstance().getSessionTimeout();
-            if (timeout == -2) {
-                return true;
-            }
-            Session session = sessions.get(iPPid);
-            if (session != null) {
-                if (!session.bValid) {
-                    if (sPin != null && sPin.equals(session.sPIN)) {
-                        session.bValid = true;
-                        session.ldtStartSession = LocalDateTime.now();
-                        Log.d(TAG, "cli valid session ppid=" + iPPid);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                LocalDateTime ldtExpire = LocalDateTime.now().minusMinutes(timeout);
-
-                if (session.ldtStartSession.isAfter(ldtExpire)) {
-                    return true;
-                } else {
-                    sessions.remove(iPPid);
-                }
-            }
-        }
-        return false;
-    }
-
-    public void requestSession(int iPid) {
-        var iPPid = getParentPid(iPid);
-        Log.d(TAG, "cli request new session pid=" + iPid + " parent pid=" + iPPid);
-        if (iPPid != -1) {
-            Session session = new Session();
-            session.sPIN = String.format("%06d", ThreadLocalRandom.current().nextInt(0, 999999));
-            session.bValid = false;
-            sessions.put(iPPid, session);
-            Log.d(TAG, "cli request pin " + session.sPIN);
-        }
+        return true;
     }
 
     public static boolean basicCheck(int uid) {

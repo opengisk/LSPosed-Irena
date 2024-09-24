@@ -246,7 +246,8 @@ public class ServiceManager {
 
         static {
             try {
-                rawGetService = android.os.ServiceManager.class.getDeclaredMethod("rawGetService", String.class);
+                //TODO FIXME
+                rawGetService =  android.os.ServiceManager.class.getDeclaredMethod("rawGetService", String.class);
                 rawGetService.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);

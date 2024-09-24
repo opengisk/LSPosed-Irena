@@ -382,25 +382,6 @@ public class ConfigManager {
         }
     }
 
-    public static int getSessionTimeout() {
-        try {
-            return LSPManagerServiceHolder.getService().getSessionTimeout();
-        } catch (RemoteException e) {
-            Log.e(App.TAG, Log.getStackTraceString(e));
-            return -2;
-        }
-    }
-
-    public static boolean setSessionTimeout(int iTimeout) {
-        try {
-            LSPManagerServiceHolder.getService().setSessionTimeout(iTimeout);
-            return true;
-        } catch (RemoteException e) {
-            Log.e(App.TAG, Log.getStackTraceString(e));
-            return false;
-        }
-    }
-
     public static int getDex2OatWrapperCompatibility() {
         try {
             return LSPManagerServiceHolder.getService().getDex2OatWrapperCompatibility();
