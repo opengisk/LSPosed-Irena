@@ -17,6 +17,8 @@
  * Copyright (C) 2021 LSPosed Contributors
  */
 
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.ide.common.signing.KeystoreHelper
 import java.io.PrintStream
@@ -26,20 +28,13 @@ plugins {
     alias(libs.plugins.lsplugin.resopt)
 }
 
-val daemonName = "LSPosed"
-
 val injectedPackageName: String by rootProject.extra
 val injectedPackageUid: Int by rootProject.extra
-
-val agpVersion: String by project
 
 val defaultManagerPackageName: String by rootProject.extra
 
 android {
-    buildFeatures {
-        prefab = true
-        buildConfig = true
-    }
+    namespace = "org.lsposed.daemon"
 
     defaultConfig {
         applicationId = "org.lsposed.daemon"
@@ -51,6 +46,11 @@ android {
         )
         buildConfigField("String", "MANAGER_INJECTED_PKG_NAME", """"$injectedPackageName"""")
         buildConfigField("int", "MANAGER_INJECTED_UID", """$injectedPackageUid""")
+    }
+
+    buildFeatures {
+        prefab = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -73,9 +73,6 @@ android {
             path("src/main/jni/CMakeLists.txt")
         }
     }
-
-    namespace = "org.lsposed.daemon"
-    ndkVersion = "28.0.12433566"
 }
 
 android.applicationVariants.all {

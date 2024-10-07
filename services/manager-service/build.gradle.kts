@@ -22,6 +22,8 @@ plugins {
 }
 
 android {
+    namespace = "org.lsposed.lspd.managerservice"
+
     buildFeatures {
         aidl = true
     }
@@ -35,7 +37,6 @@ android {
             isMinifyEnabled = false
         }
     }
-    namespace = "org.lsposed.lspd.managerservice"
 }
 
 dependencies {

@@ -30,8 +30,6 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.color.MaterialColors;
-
 import org.lsposed.lspd.models.UserInfo;
 import org.lsposed.manager.R;
 import org.lsposed.manager.databinding.DialogTitleBinding;
@@ -56,8 +54,6 @@ public class RecyclerViewDialogFragment extends AppCompatDialogFragment {
 
         binding.recyclerView.setAdapter(pickAdaptor);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        binding.swipeRefreshLayout.setColorSchemeColors(MaterialColors.getColor(binding.swipeRefreshLayout, com.google.android.material.R.attr.colorPrimary));
-        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(MaterialColors.getColor(binding.swipeRefreshLayout, com.google.android.material.R.attr.colorSurfaceContainer));
         pickAdaptor.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {

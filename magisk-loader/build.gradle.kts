@@ -42,12 +42,7 @@ val verCode: Int by rootProject.extra
 val verName: String by rootProject.extra
 
 android {
-    flavorDimensions += "api"
-
-    buildFeatures {
-        prefab = true
-        buildConfig = true
-    }
+    namespace = "org.lsposed.lspd"
 
     defaultConfig {
         applicationId = "org.lsposed.lspd"
@@ -60,6 +55,13 @@ android {
         )
         buildConfigField("String", "MANAGER_INJECTED_PKG_NAME", """"$injectedPackageName"""")
         buildConfigField("int", "MANAGER_INJECTED_UID", """$injectedPackageUid""")
+    }
+
+    flavorDimensions += "api"
+
+    buildFeatures {
+        prefab = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -94,8 +96,6 @@ android {
             }
         }
     }
-    namespace = "org.lsposed.lspd"
-    ndkVersion = "28.0.12433566"
 }
 abstract class Injected @Inject constructor(val magiskDir: String) {
     @get:Inject

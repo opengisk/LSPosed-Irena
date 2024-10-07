@@ -20,6 +20,8 @@
 import com.android.build.api.dsl.ApplicationDefaultConfig
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.api.AndroidBasePlugin
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
 
 plugins {
     alias(libs.plugins.lsplugin.cmaker)
@@ -27,6 +29,7 @@ plugins {
     alias(libs.plugins.agp.lib) apply false
     alias(libs.plugins.agp.app) apply false
     alias(libs.plugins.nav.safeargs) apply false
+    alias(libs.plugins.kotlin) apply false
 }
 
 cmaker {
@@ -75,13 +78,9 @@ val androidSourceCompatibility by extra(JavaVersion.VERSION_21)
 val androidTargetCompatibility by extra(JavaVersion.VERSION_21)
 val androidCmakeVersion by extra("3.28.0+")
 
-tasks.register("Delete", Delete::class) {
-    delete(rootProject.layout.buildDirectory)
-}
-
 subprojects {
-    plugins.withType(AndroidBasePlugin::class.java) {
-        extensions.configure(CommonExtension::class.java) {
+    plugins.withType(AndroidBasePlugin::class) {
+        extensions.configure(CommonExtension::class) {
             compileSdk = androidCompileSdkVersion
             ndkVersion = androidCompileNdkVersion
             buildToolsVersion = androidBuildToolsVersion
@@ -112,10 +111,15 @@ subprojects {
             }
         }
     }
-    plugins.withType(JavaPlugin::class.java) {
-        extensions.configure(JavaPluginExtension::class.java) {
+    plugins.withType(JavaPlugin::class) {
+        extensions.configure(JavaPluginExtension::class) {
             sourceCompatibility = androidSourceCompatibility
             targetCompatibility = androidTargetCompatibility
+        }
+    }
+    plugins.withType(KotlinBasePlugin::class) {
+        extensions.configure(KotlinProjectExtension::class) {
+            jvmToolchain(21)
         }
     }
 }

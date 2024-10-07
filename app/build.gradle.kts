@@ -17,6 +17,7 @@
  * Copyright (C) 2021 LSPosed Contributors
  */
 
+import com.android.build.gradle.tasks.PackageAndroidArtifact
 import java.time.Instant
 
 plugins {
@@ -26,6 +27,7 @@ plugins {
     alias(libs.plugins.materialthemebuilder)
     alias(libs.plugins.lsplugin.resopt)
     alias(libs.plugins.lsplugin.apksign)
+    alias(libs.plugins.kotlin)
 }
 
 apksign {
@@ -38,14 +40,16 @@ apksign {
 val defaultManagerPackageName: String by rootProject.extra
 
 android {
-    buildFeatures {
-        viewBinding = true
-        buildConfig = true
-    }
+    namespace = defaultManagerPackageName
 
     defaultConfig {
         applicationId = defaultManagerPackageName
         buildConfigField("long", "BUILD_TIME", Instant.now().epochSecond.toString())
+    }
+
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
     }
 
     packaging {
@@ -56,10 +60,19 @@ android {
             excludes += "org/**"
             excludes += "**.properties"
             excludes += "**.bin"
+            excludes += "kotlin-tooling-metadata.json"
         }
     }
 
-    dependenciesInfo.includeInApk = false
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
+    // https://stackoverflow.com/a/77745844
+    tasks.withType<PackageAndroidArtifact> {
+        doFirst { appMetadata.asFile.orNull?.writeText("") }
+    }
 
     buildTypes {
         release {
@@ -76,7 +89,6 @@ android {
             }
         }
     }
-    namespace = defaultManagerPackageName
 }
 
 autoResConfig {
@@ -160,7 +172,6 @@ dependencies {
 }
 
 configurations.all {
-    exclude("org.jetbrains", "annotations")
     exclude("androidx.appcompat", "appcompat")
     exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
     exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
