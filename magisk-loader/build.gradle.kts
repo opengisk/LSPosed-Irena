@@ -17,6 +17,8 @@
  * Copyright (C) 2021 - 2022 LSPosed Contributors
  */
 
+@file:Suppress("UnstableApiUsage")
+
 import org.apache.commons.codec.binary.Hex
 import org.apache.tools.ant.filters.FixCrLfFilter
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -118,9 +120,9 @@ val generateWebRoot = tasks.register<Copy>("generateWebRoot") {
     group = "LSPosed"
     val webroottmp = File("$projectDir/build/intermediates/generateWebRoot")
     val webrootsrc = File(webroottmp, "src")
+    val os = org.gradle.internal.os.OperatingSystem.current()
 
     onlyIf {
-        val os = org.gradle.internal.os.OperatingSystem.current()
         if (os.isWindows) {
             exec {
                 commandLine("cmd", "/c", "where", "pnpm")
@@ -149,7 +151,11 @@ val generateWebRoot = tasks.register<Copy>("generateWebRoot") {
         }
         exec {
             workingDir = webroottmp
-            commandLine("./node_modules/.bin/parcel", "build", "src/index.html")
+            if (os.isWindows) {
+                commandLine("powershell", "./node_modules/.bin/parcel.ps1", "build", "src/index.html")
+            } else {
+                commandLine("./node_modules/.bin/parcel", "build", "src/index.html")
+            }
         }
     }
 }
