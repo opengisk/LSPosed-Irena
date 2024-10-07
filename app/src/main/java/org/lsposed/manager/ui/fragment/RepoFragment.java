@@ -51,6 +51,8 @@ import androidx.core.view.MenuProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.color.MaterialColors;
+
 import org.lsposed.manager.App;
 import org.lsposed.manager.R;
 import org.lsposed.manager.databinding.FragmentRepoBinding;
@@ -126,6 +128,8 @@ public class RepoFragment extends BaseFragment implements RepoLoader.RepoListene
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         RecyclerViewKt.fixEdgeEffect(binding.recyclerView, false, true);
+        binding.swipeRefreshLayout.setColorSchemeColors(MaterialColors.getColor(binding.swipeRefreshLayout, com.google.android.material.R.attr.colorPrimary));
+        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(MaterialColors.getColor(binding.swipeRefreshLayout, com.google.android.material.R.attr.colorSurfaceContainer));
         binding.swipeRefreshLayout.setOnRefreshListener(adapter::fullRefresh);
         binding.swipeRefreshLayout.setProgressViewEndTarget(true, binding.swipeRefreshLayout.getProgressViewEndOffset());
         View.OnClickListener l = v -> {
